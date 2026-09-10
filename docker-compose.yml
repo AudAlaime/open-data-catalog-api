@@ -1,0 +1,10 @@
+services:
+  web:
+    build:
+      context: .
+    environment:
+      DJANGO_DEBUG: "true"
+      DJANGO_SECRET_KEY: "django-insecure-docker-development-key"
+    ports:
+      - "8000:8000"
+
