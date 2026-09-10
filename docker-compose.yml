@@ -3,8 +3,28 @@ services:
     build:
       context: .
     environment:
+      DATABASE_URL: "postgresql://catalog_user:catalog_password@db:5432/open_data_catalog"
       DJANGO_DEBUG: "true"
       DJANGO_SECRET_KEY: "django-insecure-docker-development-key"
+    depends_on:
+      db:
+        condition: service_healthy
     ports:
       - "8000:8000"
 
+  db:
+    image: postgres:16-bookworm
+    environment:
+      POSTGRES_DB: "open_data_catalog"
+      POSTGRES_USER: "catalog_user"
+      POSTGRES_PASSWORD: "catalog_password"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U catalog_user -d open_data_catalog"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
