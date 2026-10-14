@@ -31,6 +31,24 @@ List published datasets:
 curl http://localhost:8000/api/datasets/
 ```
 
+Search in titles, descriptions, producers, themes, and tags:
+
+```bash
+curl "http://localhost:8000/api/datasets/?q=energy"
+```
+
+Filter by theme, producer, license, or publication status:
+
+```bash
+curl "http://localhost:8000/api/datasets/?theme=energy"
+curl "http://localhost:8000/api/datasets/?producer=ADEME"
+curl "http://localhost:8000/api/datasets/?license=Open%20Licence"
+curl "http://localhost:8000/api/datasets/?is_published=false"
+```
+
+Filters can be combined. Without `is_published`, only published datasets are
+returned.
+
 Create a dataset:
 
 ```bash
