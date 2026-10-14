@@ -108,6 +108,26 @@ Apply Django's built-in database migrations after the first start:
 docker compose exec web python manage.py migrate
 ```
 
+Create seven example datasets for local testing:
+
+```bash
+docker compose exec web python manage.py seed_datasets
+```
+
+The command is safe to run more than once. You can then list the examples or
+search them:
+
+```bash
+curl http://localhost:8000/api/datasets/
+curl "http://localhost:8000/api/datasets/?q=energy"
+```
+
+Without Docker, the equivalent command is:
+
+```bash
+uv run python manage.py seed_datasets
+```
+
 View the application logs:
 
 ```bash
