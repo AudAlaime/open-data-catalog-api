@@ -12,6 +12,7 @@ or Python and SQLite.
 - CRUD API for public dataset records
 - Text search across titles, descriptions, producers, themes, and tags
 - Filters for theme, producer, license, and publication status
+- Stable page-number pagination with 10 datasets per page
 - Published datasets shown by default in list responses
 - Idempotent command for loading realistic demonstration data
 - Automated tests with pytest and code quality checks with Ruff
@@ -105,7 +106,7 @@ available at `http://127.0.0.1:8000/health`.
 
 | Method | Endpoint | Description |
 | --- | --- | --- |
-| `GET` | `/api/datasets/` | List published datasets |
+| `GET` | `/api/datasets/` | List published datasets with pagination |
 | `POST` | `/api/datasets/` | Create a dataset |
 | `GET` | `/api/datasets/{id}/` | Retrieve a dataset |
 | `PATCH` | `/api/datasets/{id}/` | Partially update a dataset |
@@ -130,6 +131,28 @@ curl "http://localhost:8000/api/datasets/?is_published=false"
 
 Filters can be combined. If `is_published` is omitted, only published datasets
 are returned.
+
+### Pagination
+
+Dataset lists contain 10 results per page and use the standard Django REST
+Framework response structure:
+
+```json
+{
+  "count": 15,
+  "next": "http://localhost:8000/api/datasets/?page=2",
+  "previous": null,
+  "results": []
+}
+```
+
+Request another page directly or combine pagination with search and filters:
+
+```bash
+curl "http://localhost:8000/api/datasets/?page=2"
+curl "http://localhost:8000/api/datasets/?theme=energy&page=2"
+curl "http://localhost:8000/api/datasets/?q=energy&page=2"
+```
 
 ### Create a dataset
 

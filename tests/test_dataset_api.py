@@ -44,7 +44,7 @@ def test_list_only_returns_published_datasets(
     response = api_client.get(reverse("dataset-list"))
 
     assert response.status_code == status.HTTP_200_OK
-    assert [item["id"] for item in response.json()] == [dataset.id]
+    assert [item["id"] for item in response.json()["results"]] == [dataset.id]
 
 
 @pytest.mark.django_db

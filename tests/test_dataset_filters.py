@@ -55,7 +55,7 @@ def test_search_across_dataset_fields(
     response = api_client.get(reverse("dataset-list"), {"q": "energy"})
 
     assert response.status_code == status.HTTP_200_OK
-    assert [item["id"] for item in response.json()] == [matching_dataset.id]
+    assert [item["id"] for item in response.json()["results"]] == [matching_dataset.id]
 
 
 @pytest.mark.django_db
@@ -80,7 +80,7 @@ def test_filter_by_text_field(
     response = api_client.get(reverse("dataset-list"), {parameter: value})
 
     assert response.status_code == status.HTTP_200_OK
-    assert [item["id"] for item in response.json()] == [matching_dataset.id]
+    assert [item["id"] for item in response.json()["results"]] == [matching_dataset.id]
 
 
 @pytest.mark.django_db
@@ -97,7 +97,7 @@ def test_filter_by_publication_status(
     response = api_client.get(reverse("dataset-list"), {"is_published": value})
 
     assert response.status_code == status.HTTP_200_OK
-    assert [item["id"] for item in response.json()] == [matching_dataset.id]
+    assert [item["id"] for item in response.json()["results"]] == [matching_dataset.id]
 
 
 @pytest.mark.django_db
@@ -110,4 +110,4 @@ def test_list_defaults_to_published_datasets(
     response = api_client.get(reverse("dataset-list"))
 
     assert response.status_code == status.HTTP_200_OK
-    assert [item["id"] for item in response.json()] == [published_dataset.id]
+    assert [item["id"] for item in response.json()["results"]] == [published_dataset.id]
