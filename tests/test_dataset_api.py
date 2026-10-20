@@ -48,6 +48,30 @@ def test_list_only_returns_published_datasets(
 
 
 @pytest.mark.django_db
+def test_html_accept_header_returns_json_without_loading_a_template(
+    api_client: APIClient,
+) -> None:
+    response = api_client.get(reverse("dataset-list"), HTTP_ACCEPT="text/html")
+
+    assert response.status_code == status.HTTP_406_NOT_ACCEPTABLE
+    assert response["Content-Type"] == "application/json"
+    assert "detail" in response.json()
+
+
+@pytest.mark.django_db
+def test_browser_accept_header_returns_the_json_dataset_list(
+    api_client: APIClient,
+) -> None:
+    browser_accept = "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
+
+    response = api_client.get(reverse("dataset-list"), HTTP_ACCEPT=browser_accept)
+
+    assert response.status_code == status.HTTP_200_OK
+    assert response["Content-Type"] == "application/json"
+    assert response.json()["results"] == []
+
+
+@pytest.mark.django_db
 def test_create_dataset(
     api_client: APIClient, dataset_payload: dict[str, object]
 ) -> None:

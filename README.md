@@ -99,6 +99,12 @@ Load the example datasets without Docker:
 uv run python manage.py seed_datasets
 ```
 
+Import up to five dataset metadata records from data.gouv.fr:
+
+```bash
+uv run python manage.py import_datagouv --query energie --limit 5
+```
+
 The API is available at `http://127.0.0.1:8000`, and the health endpoint is
 available at `http://127.0.0.1:8000/health`.
 
@@ -207,6 +213,26 @@ Check Django and PostgreSQL inside Docker:
 docker compose exec web python manage.py check
 docker compose exec db pg_isready -U catalog_user -d open_data_catalog
 ```
+
+## Importing Metadata from data.gouv.fr
+
+Import the first page of public dataset metadata matching a search query:
+
+```bash
+uv run python manage.py import_datagouv --query energie --limit 5
+```
+
+With Docker:
+
+```bash
+docker compose exec web python manage.py import_datagouv \
+  --query energie --limit 5
+```
+
+The default limit is 5 and the maximum is 20. The command imports metadata
+only: it does not download dataset files. Records are identified by their
+data.gouv.fr page URL, so running the same import again does not create
+duplicates. Records without a usable public URL are skipped.
 
 ## Tests and Code Quality
 
