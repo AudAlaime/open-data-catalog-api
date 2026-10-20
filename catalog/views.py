@@ -1,14 +1,20 @@
 from django.db.models import Q, QuerySet, TextField
 from django.db.models.functions import Cast
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.viewsets import ModelViewSet
 
 from catalog.models import Dataset
 from catalog.serializers import DatasetSerializer
 
 
+class DatasetPagination(PageNumberPagination):
+    page_size = 10
+
+
 class DatasetViewSet(ModelViewSet):
     queryset = Dataset.objects.all()
     serializer_class = DatasetSerializer
+    pagination_class = DatasetPagination
 
     def get_queryset(self) -> QuerySet[Dataset]:
         queryset = Dataset.objects.all()
@@ -38,4 +44,4 @@ class DatasetViewSet(ModelViewSet):
                 | Q(tags_text__icontains=query)
             )
 
-        return queryset
+        return queryset.order_by("id")
